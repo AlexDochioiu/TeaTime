@@ -1,1 +1,1 @@
-include ':example', ':boningknife'
+include ':example', ':boningknife-annotation', ':boningknife-processor'
