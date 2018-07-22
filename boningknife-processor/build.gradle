@@ -2,12 +2,17 @@ apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-def processorLibraryVersion = "0.1.3"
+def processorLibraryVersion = "0.1.6"
+
+repositories {
+    jcenter()
+    mavenLocal()
+}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    api 'com.squareup:javapoet:1.11.1'
     implementation project(':boningknife-annotation')
-    implementation 'com.squareup:javapoet:1.11.1'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
@@ -27,7 +32,7 @@ ext {
     libraryVersion = processorLibraryVersion
     developerId = 'jeefo'
     developerName = 'AlexDochioiu'
-    developerEmail = 'dochioiu.ale@gmail.com'
+    developerEmail = 'dochioiu.alex@gmail.com'
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
