@@ -44,6 +44,9 @@ public class SimpleClass extends SimpleBaseClass implements IISimpleClass, Simpl
         return 2;
     }
 
+    public void newMethod() {
+    }
+
     @Override
     public String interfaceMethod(Integer value) {
         return null;

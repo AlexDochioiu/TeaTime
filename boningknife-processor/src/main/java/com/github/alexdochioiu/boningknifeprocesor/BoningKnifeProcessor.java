@@ -1,6 +1,5 @@
 package com.github.alexdochioiu.boningknifeprocesor;
 
-import com.github.alexdochioiu.boningknife.Interfaced;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -64,7 +63,11 @@ public class BoningKnifeProcessor extends AbstractProcessor {
     }
 
     private boolean processInterfacedClasses(RoundEnvironment roundEnvironment) {
-        final Set<? extends Element> interfaced = roundEnvironment.getElementsAnnotatedWith(Interfaced.class);
+        TypeElement interfacedType = processingEnv
+                .getElementUtils()
+                .getTypeElement("com.github.alexdochioiu.boningknife.Interfaced");
+
+        final Set<? extends Element> interfaced = roundEnvironment.getElementsAnnotatedWith(interfacedType);
 
         if (interfaced == null || interfaced.isEmpty()) {
             return true;
