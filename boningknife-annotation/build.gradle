@@ -2,15 +2,15 @@ apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-def annotatorLibraryVersion = "0.1.0"
+def annotatorLibraryVersion = "0.1.1"
 
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
 
 ext {
     bintrayRepo = 'BoningKnife' // your repo name

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Created by Alexandru Iustin Dochioiu on 7/21/2018
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface Interfaced {
     //String named() default
