@@ -1,6 +1,6 @@
 package com.github.alexdochioiu.interfaceinjector;
 
-import com.github.alexdochioiu.teaspoon.Interfaced;
+import com.github.alexdochioiu.teatime.Interfaced;
 
 /**
  * Created by Alexandru Iustin Dochioiu on 7/21/2018

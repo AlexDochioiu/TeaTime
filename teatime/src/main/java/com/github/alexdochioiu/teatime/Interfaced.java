@@ -1,4 +1,4 @@
-package com.github.alexdochioiu.teaspoon;
+package com.github.alexdochioiu.teatime;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package com.github.alexdochioiu.teaspoonprocesor;
+package com.github.alexdochioiu.teatimeprocesor;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -23,9 +23,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
-@SupportedAnnotationTypes("com.github.alexdochioiu.teaspoon.Interfaced")
+@SupportedAnnotationTypes("com.github.alexdochioiu.teatime.Interfaced")
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-public class TeaSpoonProcessor extends AbstractProcessor {
+public class TeaTimeProcessor extends AbstractProcessor {
 
     private ProcessingEnvironment processingEnvironment;
 
@@ -50,7 +50,7 @@ public class TeaSpoonProcessor extends AbstractProcessor {
     private boolean processInterfacedClasses(RoundEnvironment roundEnvironment) {
         TypeElement interfacedType = processingEnv
                 .getElementUtils()
-                .getTypeElement("com.github.alexdochioiu.teaspoon.Interfaced");
+                .getTypeElement("com.github.alexdochioiu.teatime.Interfaced");
 
         final Set<? extends Element> interfaced = roundEnvironment.getElementsAnnotatedWith(interfacedType);
 

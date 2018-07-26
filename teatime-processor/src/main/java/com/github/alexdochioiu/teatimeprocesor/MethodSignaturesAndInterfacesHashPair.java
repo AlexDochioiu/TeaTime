@@ -1,4 +1,4 @@
-package com.github.alexdochioiu.teaspoonprocesor;
+package com.github.alexdochioiu.teatimeprocesor;
 
 import java.util.HashSet;
 

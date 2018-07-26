@@ -12,18 +12,18 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api 'com.squareup:javapoet:1.11.1'
-    implementation project(':teaspoon')
+    implementation project(':teatime')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
 ext {
-    bintrayRepo = 'TeaSpoon' // your repo name
-    bintrayName = 'teaspoon-processor' // has to be same as your library module name
+    bintrayRepo = 'TeaTime' // your repo name
+    bintrayName = 'teatime-processor' // has to be same as your library module name
     publishedGroupId = 'com.github.alexdochioiu' // your module package name
-    libraryName = 'teaspoon-processor'
-    artifact = 'teaspoon-processor' // has to be same as your library module name
+    libraryName = 'teatime-processor'
+    artifact = 'teatime-processor' // has to be same as your library module name
     libraryDescription = 'Annotation processor for interface injection'
     siteUrl = 'https://github.com/AlexDochioiu/BoningKnife'
     issuesUrl = 'https://github.com/AlexDochioiu/BoningKnife/issues'

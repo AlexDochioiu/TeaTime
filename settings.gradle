@@ -1,1 +1,1 @@
-include ':example', ':teaspoon', ':teaspoon-processor'
+include ':example', ':teatime', ':teatime-processor'
