@@ -3,17 +3,14 @@ package com.github.alexdochioiu.boningknifeprocesor;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -25,41 +22,29 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 
 @SupportedAnnotationTypes("com.github.alexdochioiu.boningknife.Interfaced")
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class BoningKnifeProcessor extends AbstractProcessor {
 
-    private int round = -1;
-
-    private Filer filer;
-    private Types typeUtils;
+    private ProcessingEnvironment processingEnvironment;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
 
-        filer = processingEnvironment.getFiler();
-        typeUtils = processingEnvironment.getTypeUtils();
+        this.processingEnvironment = processingEnvironment;
+        MessagerWrapper.initInstance(processingEnvironment.getMessager());
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-
-        round++;
-
-        if (round == 0) {
-            EnvironmentUtil.init(processingEnv);
-        }
-
         if (!processInterfacedClasses(roundEnvironment)) {
             return false;
         }
 
-        EnvironmentUtil.logWarning("Finished successfully");
+        MessagerWrapper.logWarning("Finished successfully");
         return true;
-
     }
 
     private boolean processInterfacedClasses(RoundEnvironment roundEnvironment) {
@@ -72,10 +57,10 @@ public class BoningKnifeProcessor extends AbstractProcessor {
         if (interfaced == null || interfaced.isEmpty()) {
             return true;
         } else {
-            // there are some to classes process
+            // there are some to classes to process
             for (Element element : interfaced) {
                 if (element.getKind() != ElementKind.CLASS) {
-                    EnvironmentUtil.logError("Interfaced can only be used for classes!");
+                    MessagerWrapper.logError("Interfaced can only be used for classes!");
                     return false;
                 }
 
@@ -90,77 +75,126 @@ public class BoningKnifeProcessor extends AbstractProcessor {
 
     private boolean generateInterface(TypeElement element) {
         final ClassName elementClassName = ClassName.get(element);
-        final List<MethodSpec> methodSpecs = getMethodSpecsRecursively(element);
+        final MethodSignaturesAndInterfacesHashPair methodSignaturesAndInterfacesHashPair =
+                getMethodsAndInterfacesTrail(element);
 
-        TypeSpec generatedInterface = TypeSpec.interfaceBuilder(String.format("II%s", elementClassName.simpleName()))
-                .addModifiers(Modifier.PUBLIC)
-                .addMethods(methodSpecs)
-                .build();
+        final HashSet<Element> interfaceElements = methodSignaturesAndInterfacesHashPair.getInterfaceElementsCopy();
+
+        // This set will contain all the methods from all the interfaces (the class, the base classes, and the base interfaces)
+        final HashSet<MethodSignatureModel> currentlyInterfacedMethods = new HashSet<>();
+
+        for (Element interfaceElement : interfaceElements) {
+            currentlyInterfacedMethods.addAll(Utils.ElementUtil.getMethodSignatureModelsHashSetFromInterface(interfaceElement, processingEnvironment));
+        }
+
+        final HashSet<MethodSignatureModel> methodsToBeAddedInGeneratedInterface =
+                new HashSet<>(methodSignaturesAndInterfacesHashPair.getMethodSignaturesCopy());
+        for (MethodSignatureModel methodSignatureModel : currentlyInterfacedMethods) {
+            if (methodsToBeAddedInGeneratedInterface.remove(methodSignatureModel)) {
+                MessagerWrapper.logWarning("Removing method %s from generated interface", methodSignatureModel.getSimpleName());
+            }
+        }
+
+        TypeSpec.Builder generatedInterfaceBuilder = TypeSpec.interfaceBuilder(String.format("II%s", elementClassName.simpleName()))
+                .addModifiers(Modifier.PUBLIC);
+
+        for (MethodSignatureModel methodSignatureModel : methodsToBeAddedInGeneratedInterface) {
+            generatedInterfaceBuilder.addMethod(
+                    MethodSpec.methodBuilder(methodSignatureModel.getSimpleName())
+                            .returns(TypeName.get(methodSignatureModel.getReturnType()))
+                            .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
+                            .addParameters(methodSignatureModel.getParameters().getOrderedParameterSpecs())
+                            .build()
+            );
+        }
+
+        for (Element interfaceElement : methodSignaturesAndInterfacesHashPair.getInterfaceElementsCopy()) {
+
+            if (processingEnvironment.getElementUtils().getPackageOf(interfaceElement).getQualifiedName().toString().equals("")) {
+                MessagerWrapper.logWarning("Could not determine package for %s", interfaceElement.getSimpleName());
+            } else {
+                MessagerWrapper.logWarning("Found type interface to be added as super: %s.%s",
+                        processingEnvironment.getElementUtils().getPackageOf(interfaceElement).getQualifiedName().toString(),
+                        interfaceElement.getSimpleName());
+
+                TypeName interfaceTypeName = TypeName.get(interfaceElement.asType());
+
+                generatedInterfaceBuilder.addSuperinterface(interfaceTypeName);
+            }
+        }
 
         try {
-            JavaFile.builder(elementClassName.packageName(), generatedInterface)
+            JavaFile.builder(elementClassName.packageName(), generatedInterfaceBuilder.build())
                     .addFileComment("Generated by BoningKnife")
                     .build()
-                    .writeTo(filer);
+                    .writeTo(processingEnvironment.getFiler());
         } catch (IOException e) {
             e.printStackTrace();
-            EnvironmentUtil.logError(String.format("Could not generate interface for '%s'", elementClassName.simpleName()));
+            MessagerWrapper.logError(String.format("Could not generate interface for '%s'", elementClassName.simpleName()));
             return false;
         }
 
         return true;
     }
 
-    private List<MethodSpec> getMethodSpecsRecursively(final TypeElement typeElement) {
-        EnvironmentUtil.logWarning(String.format("getMethodsRec: %s", typeElement.getSimpleName()));
-        LinkedList<MethodSpec> methodSpecs = new LinkedList<>();
+    /**
+     * Used to obtained all the methods publicly accessible for an instance of a given class and all
+     * the interfaces extended by that class and its base classes
+     * <p>
+     * <b>NOTE:</b> this method uses recursion to check the base classes
+     * <b>NOTE2:</b> the methods defined for {@link Object} type are ignored
+     *
+     * @param typeElement the {@link TypeElement} for a class <b>(it is assumed that this type element
+     *                    is ElementKind.CLASS)</b>
+     * @return
+     */
+    private MethodSignaturesAndInterfacesHashPair getMethodsAndInterfacesTrail(final TypeElement typeElement) {
+        MessagerWrapper.logWarning(String.format("getMethodsRec: %s", typeElement.getSimpleName()));
+        MethodSignaturesAndInterfacesHashPair pair = new MethodSignaturesAndInterfacesHashPair();
 
+        // start by getting the signature for all the methods
         for (Element elementEnclosed : typeElement.getEnclosedElements()) {
             if (elementEnclosed instanceof ExecutableElement) {
                 final ExecutableElement executableElement = (ExecutableElement) elementEnclosed;
 
-                if (ExecutableElementUtil.isConstructor(executableElement)) {
+                if (Utils.ExecutableElementUtil.isConstructor(executableElement)) {
                     // We ignore constructors
                     continue;
                 }
 
-                if (!ExecutableElementUtil.isPublicNonStatic(executableElement)) {
+                if (!Utils.ExecutableElementUtil.isPublicNonStatic(executableElement)) {
                     // We ignore methods which are not public or statics
                     continue;
                 }
                 // TODO: extend present interfaces
-                // TODO: remove duplicates due to overriding from base class
-                // TODO: check if it is @DontInterface (care if it is overridden to not interface it from base class)
 
-                List<ParameterSpec> parameterSpecs = ExecutableElementUtil.getParameters(executableElement);
-
-                MethodSpec methodSpec = MethodSpec.methodBuilder(executableElement.getSimpleName().toString())
-                        .returns(TypeName.get(executableElement.getReturnType()))
-                        .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-                        .addParameters(parameterSpecs)
-                        .build();
-
-                methodSpecs.add(methodSpec);
+                MethodSignatureModel methodSignatureModel = new MethodSignatureModel(executableElement);
+                pair.addMethodSignature(methodSignatureModel);
             }
+        }
+
+        // then get all the interfaces it extends
+        for (TypeMirror interfaceMirror : typeElement.getInterfaces()) {
+            pair.addInterface(processingEnvironment.getTypeUtils().asElement(interfaceMirror));
         }
 
         // Check if the base class for this exists and is not Object. In such case, go deeper and get those methods as well
         final TypeMirror superTypeMirror = typeElement.getSuperclass();
         if (superTypeMirror != null) {
-            EnvironmentUtil.logWarning("Got superclass");
-            final Element superElement = typeUtils.asElement(superTypeMirror);
+            MessagerWrapper.logWarning("Got superclass");
+            final Element superElement = processingEnvironment.getTypeUtils().asElement(superTypeMirror);
             if (superElement != null) {
-                EnvironmentUtil.logWarning("Got superelement");
+                MessagerWrapper.logWarning("Got superelement");
                 final TypeElement superTypeElement = (TypeElement) superElement;
                 //noinspection ConstantConditions
                 if (superTypeElement != null && !superTypeElement.getSimpleName().toString().equals("Object")) {
-                    EnvironmentUtil.logWarning("Got supertypelemenet");
+                    MessagerWrapper.logWarning("Got supertypelemenet");
                     //our superclass exists and is indeed a class (not sure if it can be something else but still worth making sure)
-                    methodSpecs.addAll(getMethodSpecsRecursively(superTypeElement));
+                    pair.innerJoin(getMethodsAndInterfacesTrail(superTypeElement));
                 }
             }
         }
 
-        return methodSpecs;
+        return pair;
     }
 }

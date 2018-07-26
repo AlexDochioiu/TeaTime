@@ -6,7 +6,7 @@ import com.github.alexdochioiu.boningknife.Interfaced;
  * Created by Alexandru Iustin Dochioiu on 7/21/2018
  */
 @Interfaced
-public class SimpleClass extends SimpleBaseClass implements IISimpleClass, SimpleInterface {
+public class SimpleClass extends SimpleBaseClass implements SimpleInterface, IISimpleClass {
     private static final String STRING_ME = "sda";
 
     public SimpleClass(String str, Integer integer) {
@@ -47,8 +47,17 @@ public class SimpleClass extends SimpleBaseClass implements IISimpleClass, Simpl
     public void newMethod() {
     }
 
-    @Override
     public String interfaceMethod(Integer value) {
         return null;
+    }
+
+    @Override
+    public int onBaseInterfaceMethod(IISimpleClass simpleClass) {
+        return super.onBaseInterfaceMethod(simpleClass);
+    }
+
+    @Override
+    public String getSomething() {
+        return super.getSomething();
     }
 }

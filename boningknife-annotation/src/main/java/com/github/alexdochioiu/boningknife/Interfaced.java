@@ -11,5 +11,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface Interfaced {
-    //String named() default
 }
