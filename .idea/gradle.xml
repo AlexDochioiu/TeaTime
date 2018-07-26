@@ -8,9 +8,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/boningknife-annotation" />
-            <option value="$PROJECT_DIR$/boningknife-processor" />
             <option value="$PROJECT_DIR$/example" />
+            <option value="$PROJECT_DIR$/teaspoon" />
+            <option value="$PROJECT_DIR$/teaspoon-processor" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

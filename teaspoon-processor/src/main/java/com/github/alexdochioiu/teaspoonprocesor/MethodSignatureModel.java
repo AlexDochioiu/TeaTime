@@ -1,4 +1,4 @@
-package com.github.alexdochioiu.boningknifeprocesor;
+package com.github.alexdochioiu.teaspoonprocesor;
 
 import com.squareup.javapoet.ParameterSpec;
 

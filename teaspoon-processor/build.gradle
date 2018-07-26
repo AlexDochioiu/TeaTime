@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-def processorLibraryVersion = "0.1.6"
+def processorLibraryVersion = "1.0.1"
 
 repositories {
     jcenter()
@@ -12,23 +12,23 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api 'com.squareup:javapoet:1.11.1'
-    implementation project(':boningknife-annotation')
+    implementation project(':teaspoon')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
 ext {
-    bintrayRepo = 'BoningKnife' // your repo name
-    bintrayName = 'boningknife-processor' // has to be same as your library module name
+    bintrayRepo = 'TeaSpoon' // your repo name
+    bintrayName = 'teaspoon-processor' // has to be same as your library module name
     publishedGroupId = 'com.github.alexdochioiu' // your module package name
-    libraryName = 'boningknife-processor'
-    artifact = 'boningknife-processor' // has to be same as your library module name
+    libraryName = 'teaspoon-processor'
+    artifact = 'teaspoon-processor' // has to be same as your library module name
     libraryDescription = 'Annotation processor for interface injection'
     siteUrl = 'https://github.com/AlexDochioiu/BoningKnife'
     issuesUrl = 'https://github.com/AlexDochioiu/BoningKnife/issues'
     gitUrl = 'https://github.com/AlexDochioiu/BoningKnife.git'
-    libLabels = ['Android', 'JeeFo', 'AlexDochioiu', "Interface", "Injection"]
+    libLabels = ['Android', 'JeeFo', 'AlexDochioiu', "Interface", "Injection", "TeaSpoon"]
     libraryVersion = processorLibraryVersion
     developerId = 'jeefo'
     developerName = 'AlexDochioiu'

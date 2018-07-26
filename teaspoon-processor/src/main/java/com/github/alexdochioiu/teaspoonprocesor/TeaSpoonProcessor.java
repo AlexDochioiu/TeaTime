@@ -1,4 +1,4 @@
-package com.github.alexdochioiu.boningknifeprocesor;
+package com.github.alexdochioiu.teaspoonprocesor;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -23,9 +23,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
-@SupportedAnnotationTypes("com.github.alexdochioiu.boningknife.Interfaced")
+@SupportedAnnotationTypes("com.github.alexdochioiu.teaspoon.Interfaced")
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-public class BoningKnifeProcessor extends AbstractProcessor {
+public class TeaSpoonProcessor extends AbstractProcessor {
 
     private ProcessingEnvironment processingEnvironment;
 
@@ -50,7 +50,7 @@ public class BoningKnifeProcessor extends AbstractProcessor {
     private boolean processInterfacedClasses(RoundEnvironment roundEnvironment) {
         TypeElement interfacedType = processingEnv
                 .getElementUtils()
-                .getTypeElement("com.github.alexdochioiu.boningknife.Interfaced");
+                .getTypeElement("com.github.alexdochioiu.teaspoon.Interfaced");
 
         final Set<? extends Element> interfaced = roundEnvironment.getElementsAnnotatedWith(interfacedType);
 

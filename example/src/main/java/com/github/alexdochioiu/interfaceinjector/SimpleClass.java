@@ -1,6 +1,6 @@
 package com.github.alexdochioiu.interfaceinjector;
 
-import com.github.alexdochioiu.boningknife.Interfaced;
+import com.github.alexdochioiu.teaspoon.Interfaced;
 
 /**
  * Created by Alexandru Iustin Dochioiu on 7/21/2018
@@ -8,6 +8,8 @@ import com.github.alexdochioiu.boningknife.Interfaced;
 @Interfaced
 public class SimpleClass extends SimpleBaseClass implements SimpleInterface, IISimpleClass {
     private static final String STRING_ME = "sda";
+    private int simpleIntVar = 2;
+    public int publicIntVar = 10;
 
     public SimpleClass(String str, Integer integer) {
 
@@ -17,8 +19,6 @@ public class SimpleClass extends SimpleBaseClass implements SimpleInterface, IIS
 
     }
 
-    private int simpleIntVar = 2;
-    public int publicIntVar = 10;
 
     public void methodA() {
     }

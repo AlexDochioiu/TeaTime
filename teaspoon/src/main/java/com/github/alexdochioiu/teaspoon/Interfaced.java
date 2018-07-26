@@ -1,4 +1,4 @@
-package com.github.alexdochioiu.boningknife;
+package com.github.alexdochioiu.teaspoon;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Created by Alexandru Iustin Dochioiu on 7/21/2018
  */
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface Interfaced {
 }
