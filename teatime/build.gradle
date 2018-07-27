@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-def annotatorLibraryVersion = "1.0.1"
+def annotatorLibraryVersion = "1.0.2"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -18,9 +18,9 @@ ext {
     libraryName = 'teatime'
     artifact = 'teatime' // has to be same as your library module name
     libraryDescription = 'Annotation library for interface injection'
-    siteUrl = 'https://github.com/AlexDochioiu/BoningKnife'
-    issuesUrl = 'https://github.com/AlexDochioiu/BoningKnife/issues'
-    gitUrl = 'https://github.com/AlexDochioiu/BoningKnife.git'
+    siteUrl = 'https://github.com/AlexDochioiu/TeaTime'
+    issuesUrl = 'https://github.com/AlexDochioiu/TeaTime/issues'
+    gitUrl = 'https://github.com/AlexDochioiu/TeaTime.git'
     libLabels = ['Android', 'JeeFo', 'AlexDochioiu', "Interface", "Injection", "TeaSpoon"]
     libraryVersion = annotatorLibraryVersion
     developerId = 'jeefo'

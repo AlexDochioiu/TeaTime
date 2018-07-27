@@ -58,13 +58,4 @@ class MessagerWrapper {
     static void logError(String errorMessage, Object... args) {
         instance.messager.printMessage(Diagnostic.Kind.ERROR, String.format(Locale.UK, errorMessage, args));
     }
-
-    /**
-     * logs other message
-     *
-     * @param otherMessage the message
-     */
-    static void logOther(String otherMessage, Object... args) {
-        instance.messager.printMessage(Diagnostic.Kind.OTHER, String.format(Locale.UK, otherMessage, args));
-    }
 }
