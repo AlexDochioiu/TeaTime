@@ -1,5 +1,7 @@
 package com.github.alexdochioiu.interfaceinjector;
 
+import android.support.annotation.NonNull;
+
 import com.github.alexdochioiu.teatime.Interfaced;
 
 /**
@@ -11,7 +13,7 @@ public class SimpleClass extends SimpleBaseClass implements SimpleInterface, IIS
     private int simpleIntVar = 2;
     public int publicIntVar = 10;
 
-    public SimpleClass(String str, Integer integer) {
+    public SimpleClass(@NonNull String str, Integer integer) {
 
     }
 
@@ -30,7 +32,7 @@ public class SimpleClass extends SimpleBaseClass implements SimpleInterface, IIS
      * @param test  some int docs
      * @return the first param
      */
-    public String methodString(String param, int test) {
+    public String methodString(@NonNull String param, int test) {
         return param;
     }
 

@@ -16,7 +16,8 @@
 
 package com.github.alexdochioiu.teatimeprocesor;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.lang.model.element.Element;
 
@@ -25,8 +26,8 @@ import javax.lang.model.element.Element;
  */
 @SuppressWarnings("UnusedReturnValue")
 final class MethodSignaturesAndInterfacesHashPair {
-    private final HashSet<MethodSignatureModel> methodSignatureModels = new HashSet<>();
-    private final HashSet<Element> interfaceElements = new HashSet<>();
+    private final Set<MethodSignatureModel> methodSignatureModels = new LinkedHashSet<>();
+    private final Set<Element> interfaceElements = new LinkedHashSet<>();
 
     /**
      * Method used for joining the method signatures and interfaces from a second {@link MethodSignaturesAndInterfacesHashPair}
@@ -40,12 +41,12 @@ final class MethodSignaturesAndInterfacesHashPair {
         this.interfaceElements.addAll(other.interfaceElements);
     }
 
-    HashSet<Element> getInterfaceElementsCopy() {
-        return new HashSet<>(interfaceElements);
+    LinkedHashSet<Element> getInterfaceElementsCopy() {
+        return new LinkedHashSet<>(interfaceElements);
     }
 
-    HashSet<MethodSignatureModel> getMethodSignaturesCopy() {
-        return new HashSet<>(methodSignatureModels);
+    LinkedHashSet<MethodSignatureModel> getMethodSignaturesCopy() {
+        return new LinkedHashSet<>(methodSignatureModels);
     }
 
     boolean addMethodSignature(MethodSignatureModel methodSignatureModel) {

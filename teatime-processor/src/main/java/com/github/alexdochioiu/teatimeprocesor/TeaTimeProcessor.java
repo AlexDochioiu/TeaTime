@@ -23,7 +23,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -76,7 +76,7 @@ public class TeaTimeProcessor extends AbstractProcessor {
             // there are some to classes to process
             for (Element element : interfaced) {
                 if (element.getKind() != ElementKind.CLASS) {
-                    MessagerWrapper.logError("Interfaced can only be used for classes!");
+                    MessagerWrapper.logError("@Interfaced can only be used for classes!");
                     return false;
                 }
 
@@ -94,17 +94,17 @@ public class TeaTimeProcessor extends AbstractProcessor {
         final MethodSignaturesAndInterfacesHashPair methodSignaturesAndInterfacesHashPair =
                 getMethodsAndInterfacesTrail(element);
 
-        final HashSet<Element> interfaceElements = methodSignaturesAndInterfacesHashPair.getInterfaceElementsCopy();
+        final LinkedHashSet<Element> interfaceElements = methodSignaturesAndInterfacesHashPair.getInterfaceElementsCopy();
 
         // This set will contain all the methods from all the interfaces (the class, the base classes, and the base interfaces)
-        final HashSet<MethodSignatureModel> currentlyInterfacedMethods = new HashSet<>();
+        final LinkedHashSet<MethodSignatureModel> currentlyInterfacedMethods = new LinkedHashSet<>();
 
         for (Element interfaceElement : interfaceElements) {
             currentlyInterfacedMethods.addAll(Utils.ElementUtil.getMethodSignatureModelsHashSetFromInterface(interfaceElement, processingEnvironment));
         }
 
-        final HashSet<MethodSignatureModel> methodsToBeAddedInGeneratedInterface =
-                new HashSet<>(methodSignaturesAndInterfacesHashPair.getMethodSignaturesCopy());
+        final LinkedHashSet<MethodSignatureModel> methodsToBeAddedInGeneratedInterface =
+                new LinkedHashSet<>(methodSignaturesAndInterfacesHashPair.getMethodSignaturesCopy());
         for (MethodSignatureModel methodSignatureModel : currentlyInterfacedMethods) {
             if (methodsToBeAddedInGeneratedInterface.remove(methodSignatureModel)) {
                 // MessagerWrapper.logWarning("Removing method %s from generated interface", methodSignatureModel.getSimpleName());
@@ -185,7 +185,6 @@ public class TeaTimeProcessor extends AbstractProcessor {
                     // We ignore methods which are not public or statics
                     continue;
                 }
-                // TODO: extend present interfaces
 
                 MethodSignatureModel methodSignatureModel = new MethodSignatureModel(executableElement);
                 pair.addMethodSignature(methodSignatureModel);

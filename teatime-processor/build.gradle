@@ -13,6 +13,11 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api 'com.squareup:javapoet:1.11.1'
     implementation project(':teatime')
+
+    testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+    testImplementation 'com.google.guava:guava:22.0'
+    testImplementation 'com.google.truth:truth:0.30'
+    testImplementation 'com.google.testing.compile:compile-testing:0.10'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7

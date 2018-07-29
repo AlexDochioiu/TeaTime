@@ -18,7 +18,7 @@ package com.github.alexdochioiu.teatimeprocesor;
 
 import com.squareup.javapoet.ParameterSpec;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,13 +35,8 @@ import javax.lang.model.type.TypeMirror;
  * Created by Alexandru Iustin Dochioiu on 7/25/2018
  */
 public class Utils {
-    static class TypeMirrorUtils {
-        /**
-         * @param processingEnvironment
-         * @param firstAnnotation
-         * @param secondAnnotation
-         * @return
-         */
+/*    static class TypeMirrorUtils {
+
         static boolean isSameAnnotation(
                 final ProcessingEnvironment processingEnvironment,
                 final TypeMirror firstAnnotation,
@@ -50,12 +45,7 @@ public class Utils {
             return processingEnvironment.getTypeUtils().isSameType(firstAnnotation, secondAnnotation);
         }
 
-        /**
-         * @param processingEnvironment
-         * @param firstAnnotation
-         * @param annotationFullName
-         * @return
-         */
+
         static boolean isSameAnnotation(
                 final ProcessingEnvironment processingEnvironment,
                 final TypeMirror firstAnnotation,
@@ -64,18 +54,13 @@ public class Utils {
             return isSameAnnotation(processingEnvironment, firstAnnotation, getAnnotationAsTypeMirror(processingEnvironment, annotationFullName));
         }
 
-        /**
-         * @param processingEnvironment
-         * @param annotationFullName
-         * @return
-         */
         static TypeMirror getAnnotationAsTypeMirror(
                 final ProcessingEnvironment processingEnvironment,
                 final String annotationFullName
         ) {
             return processingEnvironment.getElementUtils().getTypeElement(annotationFullName).asType();
         }
-    }
+    }*/
 
     /**
      * Class providing utils for Executable Elements
@@ -99,6 +84,7 @@ public class Utils {
          * @param executableElement a non-constructor {@link ExecutableElement}
          * @return true if the method is public non static; false otherwise
          */
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         static boolean isPublicNonStatic(final ExecutableElement executableElement) {
             boolean foundPublicModifier = false;
             for (Modifier modifier : executableElement.getModifiers()) {
@@ -120,8 +106,17 @@ public class Utils {
         static MethodSignatureModel.Parameters getParameters(final ExecutableElement executableElement) {
             final List<ParameterSpec> parameterSpecs = new LinkedList<>();
 
-            for (VariableElement variableElement : executableElement.getParameters()) {
-                parameterSpecs.add(ParameterSpec.get(variableElement));
+            for (final VariableElement variableElement : executableElement.getParameters()) {
+                final ParameterSpec parameterSpec = ParameterSpec.get(variableElement);
+
+                // parameterSpec.annotations is immutable so the following code won't work
+                /*
+                final List<? extends AnnotationMirror> annotationMirrors = variableElement.getAnnotationMirrors();
+                for (AnnotationMirror annotationMirror : annotationMirrors) {
+                    parameterSpec.annotations.add(AnnotationSpec.get(annotationMirror));
+                }
+                */
+                parameterSpecs.add(parameterSpec);
             }
 
             return new MethodSignatureModel.Parameters(parameterSpecs);
@@ -130,18 +125,18 @@ public class Utils {
 
     static class ElementUtil {
 
-        static HashSet<MethodSignatureModel> getMethodSignatureModelsHashSetFromInterface(
+        static LinkedHashSet<MethodSignatureModel> getMethodSignatureModelsHashSetFromInterface(
                 final Element interfaceElement,
                 final ProcessingEnvironment processingEnvironment
         ) {
-            HashSet<MethodSignatureModel> methodSignatureModels = new HashSet<>();
+            LinkedHashSet<MethodSignatureModel> methodSignatureModels = new LinkedHashSet<>();
 
             for (Element element : interfaceElement.getEnclosedElements()) {
                 if (element instanceof ExecutableElement) {
                     final ExecutableElement executableElement = (ExecutableElement) element;
 
                     if (Utils.ExecutableElementUtil.isConstructor(executableElement)) {
-                        MessagerWrapper.logWarning("Unexpected constructor in interface %s", interfaceElement.getSimpleName());
+                        MessagerWrapper.logWarning("Unexpected constructor(??) in interface %s", interfaceElement.getSimpleName());
                         // We ignore constructors
                         continue;
                     }
