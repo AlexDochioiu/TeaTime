@@ -67,7 +67,7 @@ public class MyProvider {
 
 To unit test `MyProvider`, **we need to mock `MyRepository` class in order to avoid making actual network calls.**
 
-### Step 2: Interface the repository and build
+### Step 2: Annotate the repository and build
 
 In order to mock `MyRepository`, we need to create an interface exposing its public methods. Using TeaTime, the `@Interfaced` annotation is added above the class and then we build the project:
 
