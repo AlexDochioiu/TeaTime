@@ -1,3 +1,5 @@
+import org.gradle.internal.jvm.Jvm
+
 apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
@@ -14,7 +16,7 @@ dependencies {
     api 'com.squareup:javapoet:1.11.1'
     implementation project(':teatime')
 
-    testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+    testCompile files(Jvm.current().getToolsJar())
     testImplementation 'com.google.guava:guava:22.0'
     testImplementation 'com.google.truth:truth:0.30'
     testImplementation 'com.google.testing.compile:compile-testing:0.10'
