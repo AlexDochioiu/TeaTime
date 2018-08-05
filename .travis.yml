@@ -23,11 +23,11 @@ android:
         - tools
         - platform-tools
         - build-tools-$ANDROID_BUILD_TOOLS
-        - android-$ANDROID_API
-        - android-$EMULATOR_API
-        - extra-google-m2repository
-        - extra-android-m2repository # for design library
-        - addon-google_apis-google-27 # google play services
+        # - android-$ANDROID_API
+        # - android-$EMULATOR_API
+        # - extra-google-m2repository
+        # - extra-android-m2repository # for design library
+        # - addon-google_apis-google-27 # google play services
         #- sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
         #- sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API
     licenses:
@@ -55,4 +55,4 @@ script:
     - ./gradlew clean test jacocoTestReport
 
 after_success:
-    — bash <(curl -s https://codecov.io/bash)
+    - bash <(curl -s https://codecov.io/bash)
