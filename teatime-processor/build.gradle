@@ -3,6 +3,7 @@ import org.gradle.internal.jvm.Jvm
 apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'jacoco'
 
 def processorLibraryVersion = "1.0.2"
 
@@ -83,6 +84,22 @@ install {
                 }
             }
         }
+    }
+}
+
+
+
+//jacoco {
+//    toolVersion = "0.8.1"
+//    reportsDir = file("$buildDir/customJacocoReportDir")
+//}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.enabled false
+        //xml.destination file("${buildDir}/jacocoCoverage")
     }
 }
 
