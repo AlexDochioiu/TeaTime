@@ -3,8 +3,7 @@
 [![bintray](https://api.bintray.com/packages/jeefo12/TeaTime/teatime/images/download.svg) ](https://bintray.com/jeefo12/JLogger/jeefologger/_latestVersion)
 [![License](https://img.shields.io/badge/License-Apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Build Status](https://travis-ci.org/AlexDochioiu/TeaTime.svg?branch=master)](https://travis-ci.org/AlexDochioiu/TeaTime)
-
-**Coverage: 92%**
+[![codecov](https://codecov.io/gh/AlexDochioiu/TeaTime/branch/master/graph/badge.svg)](https://codecov.io/gh/AlexDochioiu/TeaTime)
 
 **TeaTime is a Java(and Android) library which generates an interface for any class annotated with `@Interfaced`. This is intended to save the time and effort put into creating single-use interfaces (implemented by a single class) which are required only for mocking, faking or stubbing the concrete class in tests.**
 
